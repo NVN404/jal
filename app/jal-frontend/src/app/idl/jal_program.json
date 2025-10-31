@@ -1,0 +1,108 @@
+{
+  "address": "Fg6PaFpoVXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS",
+  "metadata": {
+    "name": "jal_program",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "record_reading",
+      "discriminator": [
+        43,
+        203,
+        50,
+        74,
+        12,
+        64,
+        166,
+        156
+      ],
+      "accounts": [
+        {
+          "name": "reading_account",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "meter_id",
+          "type": "string"
+        },
+        {
+          "name": "reading",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "WaterReading",
+      "discriminator": [
+        116,
+        48,
+        214,
+        12,
+        0,
+        21,
+        195,
+        87
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "MeterIdEmpty",
+      "msg": "Meter ID cannot be empty."
+    },
+    {
+      "code": 6001,
+      "name": "MeterIdTooLong",
+      "msg": "Meter ID cannot exceed 50 characters."
+    },
+    {
+      "code": 6002,
+      "name": "ReadingCannotBeZero",
+      "msg": "Reading value must be greater than zero."
+    }
+  ],
+  "types": [
+    {
+      "name": "WaterReading",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "meter_id",
+            "type": "string"
+          },
+          {
+            "name": "reading",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          }
+        ]
+      }
+    }
+  ]
+}
