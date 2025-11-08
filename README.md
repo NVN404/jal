@@ -1,7 +1,10 @@
+[website](https://jal-6q95.vercel.app/)
+
+https://jal-6q95.vercel.app/
+
 ## **White Paper - 12.10.2025**
 
 <img width="1563" height="748" alt="Screenshot From 2025-10-31 08-57-44" src="https://github.com/user-attachments/assets/e2c4d49a-008c-44e4-b490-5bf769040ada" />
-
 
 # **Jal RWA Protocol**
 
@@ -182,6 +185,6 @@ Internet of Things data is encrypted with AES-256 standards and anonymized to co
 The Jal Protocol is more than a technology—it’s a movement to secure our planet’s most precious resource. We invite Residents’ Associations, corporations, and investors to join our 2026 pilot in Bengaluru, São Paulo, or Cape Town. Together, we can save billions of liters, empower communities, and build a sustainable future.\
 \
 \
-by  [yunohu](https://x.com/yun0hu)
+by [yunohu](https://x.com/yun0hu)
 
 ---
