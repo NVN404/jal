@@ -1,207 +1,309 @@
-
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { placeHolderImages } from '@/lib/placeholder-images';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { ArrowUpDown, Settings, Plus, Info } from 'lucide-react';
+import { ArrowUpDown, Droplet ,Plus} from 'lucide-react';
 import { Logo } from '@/components/icons/logo';
-import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-const UsdcIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
-        <g fill="none" fillRule="evenodd">
-            <circle fill="#2775CA" cx="19" cy="19" r="19"/>
-            <path d="M19.833 26.583c-4.41 0-7.989-3.483-7.989-7.778s3.58-7.778 7.99-7.778c1.332 0 2.58.32 3.693.88l-1.39 2.3A4.925 4.925 0 0019.833 13.9c-2.824 0-5.117 2.22-5.117 4.905 0 2.686 2.293 4.906 5.117 4.906a4.92 4.92 0 003.3-.993l1.403 2.316a7.86 7.86 0 01-4.703 1.448zm4.564-10.46l-1.42 2.339c.228.43.355.914.355 1.432s-.127 1.002-.356 1.432l1.42 2.338c.6-.93.94-2.01.94-3.17s-.34-2.24-.94-3.17z" fill="#FFF"/>
-        </g>
-    </svg>
-)
-
-const EthIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
-        <path d="M12 1.75L11.25 2.5V15.5L12 16L18.75 12.25L12 1.75Z" fill="#343434" />
-        <path d="M12 1.75L5.25 12.25L12 16V1.75Z" fill="#8C8C8C" />
-        <path d="M12 17.25V22.25L18.75 13.5L12 17.25Z" fill="#3C3C3B" />
-        <path d="M12 22.25V17.25L5.25 13.5L12 22.25Z" fill="#8C8C8C" />
-        <path d="M18.75 12.25L12 16L12.75 15.5V2.5L18.75 12.25Z" fill="#141414" />
-        <path d="M5.25 12.25L12 16V2.5L5.25 12.25Z" fill="#393939" />
-    </svg>
-)
-
-type Token = {
-    name: string;
-    icon: React.ReactNode;
-    balance: number;
-}
-
-const tokens: Record<string, Token> = {
-    JAL: { name: 'JAL', icon: <Logo className="h-6 w-6 text-primary" />, balance: 0.00 },
-    USDC: { name: 'USDC', icon: <UsdcIcon />, balance: 1200.50 },
-    wETH: { name: 'wETH', icon: <EthIcon />, balance: 2.5 },
-}
-
-const SwapTokenInput = ({ side, token, amount, onAmountChange } : { side: 'pay' | 'receive', token: Token, amount: string, onAmountChange: (value: string) => void }) => (
-     <div className="bg-primary/10 rounded-lg p-4">
-        <div className="flex justify-between items-center text-sm text-muted-foreground">
-            <span>You {side}</span>
-            <span>Balance: {token.balance.toLocaleString()}</span>
-        </div>
-        <div className="flex justify-between items-center mt-2">
-            <div className="flex items-center gap-2">
-                {token.icon}
-                <span className="text-lg font-bold">{token.name}</span>
-            </div>
-            <Input 
-                type="number" 
-                placeholder="0.0" 
-                value={amount}
-                onChange={(e) => onAmountChange(e.target.value)}
-                className="text-2xl font-bold text-right bg-transparent border-none focus-visible:ring-0" 
-            />
-        </div>
-    </div>
+const SolanaIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
+    <defs>
+      <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="solana">
+        <stop stopColor="#00FFA3" offset="0%"/>
+        <stop stopColor="#00D1FF" offset="100%"/>
+      </linearGradient>
+    </defs>
+    <circle fill="url(#solana)" cx="19" cy="19" r="19"/>
+    <path d="M11.8 24.4c.2.2.5.3.7.3h14.3l-2.8-2.8H11.8l2.8 2.8c-.2.2-.2.5 0 .7zM11.8 13.6c.2-.2.5-.3.7-.3h14.3l-2.8 2.8H11.8l2.8-2.8c-.2-.2-.2-.5 0-.7zM26.2 19c-.2-.2-.5-.3-.7-.3H11.2l2.8 2.8h14.3l-2.8-2.8c.2-.2.2-.5 0-.7z" fill="#fff"/>
+  </svg>
 );
 
+const UsdcIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
+    <g fill="none" fillRule="evenodd">
+      <circle fill="#2775CA" cx="19" cy="19" r="19"/>
+      <path d="M19.833 26.583c-4.41 0-7.989-3.483-7.989-7.778s3.58-7.778 7.99-7.778c1.332 0 2.58.32 3.693.88l-1.39 2.3A4.925 4.925 0 0019.833 13.9c-2.824 0-5.117 2.22-5.117 4.905 0 2.686 2.293 4.906 5.117 4.906a4.92 4.92 0 003.3-.993l1.403 2.316a7.86 7.86 0 01-4.703 1.448zm4.564-10.46l-1.42 2.339c.228.43.355.914.355 1.432s-.127 1.002-.356 1.432l1.42 2.338c.6-.93.94-2.01.94-3.17s-.34-2.24-.94-3.17z" fill="#FFF"/>
+    </g>
+  </svg>
+);
 
+type Token = {
+  name: string;
+  icon: React.ReactNode;
+  balance: number;
+};
+
+const tokens: Record<string, Token> = {
+  JAL: { name: 'JAL', icon: <Logo className="h-6 w-6 text-primary" />, balance: 1234.56 },
+  USDC: { name: 'USDC', icon: <UsdcIcon />, balance: 1200.50 },
+  SOL: { name: 'SOL', icon: <SolanaIcon />, balance: 15.8 },
+};
+
+// === SWAP: TRUE SWAP + TOGGLE USDC/SOL ===
 const SwapInterface = () => {
-    const [swapFrom, setSwapFrom] = useState<Token>(tokens.USDC);
-    const [swapTo, setSwapTo] = useState<Token>(tokens.JAL);
-    const [amountFrom, setAmountFrom] = useState('');
-    const [amountTo, setAmountTo] = useState('');
+  const [isFromJal, setIsFromJal] = useState(false); // false = pay USDC/SOL → receive $JAL
+  const [payToken, setPayToken] = useState<Token>(tokens.USDC);
+  const [amountPay, setAmountPay] = useState('');
+  const [amountReceive, setAmountReceive] = useState('');
 
-    const handleSwapDirection = () => {
-        setSwapFrom(swapTo);
-        setSwapTo(swapFrom);
-        setAmountFrom(amountTo);
-        setAmountTo(amountFrom);
+  // Toggle USDC ↔ SOL (only when not $JAL)
+  const togglePayToken = () => {
+    setPayToken(prev => prev.name === 'USDC' ? tokens.SOL : tokens.USDC);
+    setAmountPay('');
+    setAmountReceive('');
+  };
+
+  // Swap top/bottom
+  const handleSwapDirection = () => {
+    setIsFromJal(prev => !prev);
+    setAmountPay(amountReceive);
+    setAmountReceive(amountPay);
+  };
+
+  // Auto-calculate
+  useEffect(() => {
+    if (!amountPay || isNaN(parseFloat(amountPay))) {
+      setAmountReceive('');
+      return;
     }
-    
-    // Dummy conversion
-    React.useEffect(() => {
-        const rate = swapFrom.name === 'USDC' ? 1 / 0.15 : 0.15;
-        const from = parseFloat(amountFrom);
-        if(!isNaN(from)) {
-            setAmountTo((from * rate).toFixed(2));
-        } else {
-            setAmountTo('');
-        }
-    }, [amountFrom, swapFrom]);
 
-    return (
-        <div className="space-y-4">
-            <SwapTokenInput side="pay" token={swapFrom} amount={amountFrom} onAmountChange={setAmountFrom} />
+    const amount = parseFloat(amountPay);
+    let rate = 0;
 
-            <div className="flex justify-center -my-2 z-10 relative">
-                <Button variant="outline" size="icon" className="bg-card rounded-full border-2 border-background" onClick={handleSwapDirection}>
-                    <ArrowUpDown className="h-5 w-5" />
-                </Button>
-            </div>
+    if (isFromJal) {
+      // $JAL → USDC or SOL
+      rate = payToken.name === 'USDC' ? 0.15 : 0.009;
+      setAmountReceive((amount * rate).toFixed(6));
+    } else {
+      // USDC or SOL → $JAL
+      rate = payToken.name === 'USDC' ? 1 / 0.15 : 1 / 0.009;
+      setAmountReceive((amount * rate).toFixed(2));
+    }
+  }, [amountPay, payToken, isFromJal]);
 
-            <SwapTokenInput side="receive" token={swapTo} amount={amountTo} onAmountChange={setAmountTo} />
-            
-            <div className="text-sm text-muted-foreground flex justify-between">
-                <span>1 JAL = 0.15 USDC</span>
-                <Settings className="w-4 h-4 cursor-pointer" />
-            </div>
+  const topToken = isFromJal ? tokens.JAL : payToken;
+  const bottomToken = isFromJal ? payToken : tokens.JAL;
+  const topAmount = isFromJal ? amountReceive : amountPay;
+  const bottomAmount = isFromJal ? amountPay : amountReceive;
+  const setTopAmount = isFromJal ? setAmountReceive : setAmountPay;
+  const setBottomAmount = isFromJal ? setAmountPay : setAmountReceive;
 
-            <Button size="lg" className="w-full text-lg font-bold">Connect Wallet</Button>
+  return (
+    <div className="space-y-4">
+      {/* TOP INPUT */}
+      <div className="bg-primary/10 rounded-lg p-4">
+        <div className="flex justify-between items-center text-sm text-muted-foreground mb-2">
+          <span>You {isFromJal ? 'sell' : 'pay'}</span>
+          <span>Balance: {topToken.balance.toLocaleString()}</span>
         </div>
-    )
-}
-
-const DepositInterface = () => {
-    const depositAssets = [
-        { ...tokens.JAL, apy: 5.2 },
-        { ...tokens.USDC, apy: 3.8 },
-        { ...tokens.wETH, apy: 2.5 },
-    ];
-
-    return (
-        <div className="space-y-4">
-            <h3 className="font-semibold text-foreground">Deposit Tokens to Earn Yield</h3>
-            {depositAssets.map(asset => (
-                <Card key={asset.name} className="bg-primary/5">
-                    <CardContent className="p-4 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            {asset.icon}
-                            <div>
-                                <p className="font-bold">{asset.name}</p>
-                                <p className="text-sm text-muted-foreground">Balance: {asset.balance.toLocaleString()}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-6">
-                            <div className="text-right">
-                                <p className="font-bold text-green-500">{asset.apy.toFixed(1)}%</p>
-                                <p className="text-xs text-muted-foreground">APY</p>
-                            </div>
-                            <Button>Deposit</Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            ))}
-             <Button size="lg" variant="outline" className="w-full text-lg font-bold mt-4">Connect Wallet</Button>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            {topToken.icon}
+            <span className="text-lg font-bold">{topToken.name}</span>
+          </div>
+          <Input 
+            type="number" 
+            placeholder="0.0" 
+            value={topAmount}
+            onChange={(e) => setTopAmount(e.target.value)}
+            className="text-2xl font-bold text-right bg-transparent border-none focus-visible:ring-0" 
+          />
         </div>
-    )
-}
 
+        {/* TOGGLE: Only if top is not $JAL */}
+        {!isFromJal && (
+          <button
+            onClick={togglePayToken}
+            className="mt-2 text-xs text-blue-600 hover:text-blue-700 underline flex items-center gap-1"
+          >
+            <ArrowUpDown className="w-3 h-3" />
+            Switch to {payToken.name === 'USDC' ? 'SOL' : 'USDC'}
+          </button>
+        )}
+      </div>
+
+      {/* SWAP ARROW */}
+      <div className="flex justify-center -my-2 z-10 relative">
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="bg-card rounded-full border-2 border-background hover:bg-card"
+          onClick={handleSwapDirection}
+        >
+          <ArrowUpDown className="h-5 w-5" />
+        </Button>
+      </div>
+
+      {/* BOTTOM INPUT */}
+      <div className="bg-primary/10 rounded-lg p-4">
+        <div className="flex justify-between items-center text-sm text-muted-foreground mb-2">
+          <span>You {isFromJal ? 'pay' : 'receive'}</span>
+          <span>Balance: {bottomToken.balance.toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            {bottomToken.icon}
+            <span className="text-lg font-bold">{bottomToken.name}</span>
+          </div>
+          <Input 
+            type="number" 
+            placeholder="0.0" 
+            value={bottomAmount}
+            onChange={(e) => setBottomAmount(e.target.value)}
+            className="text-2xl font-bold text-right bg-transparent border-none focus-visible:ring-0" 
+          />
+        </div>
+      </div>
+
+      {/* RATE */}
+      <div className="text-sm text-muted-foreground flex justify-between items-center">
+        <span>
+          1 {isFromJal ? bottomToken.name : '$JAL'} ={' '}
+          {isFromJal 
+            ? (bottomToken.name === 'USDC' ? '6.67 $JAL' : '111.11 $JAL')
+            : (payToken.name === 'USDC' ? '0.15 USDC' : '0.009 SOL')
+          }
+        </span>
+        <div className="flex items-center gap-1">
+          <Droplet className="w-4 h-4 text-blue-500" />
+          <span className="text-xs">1 $JAL = 1 m³ verified water</span>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <Button size="lg" className="w-full text-lg font-bold bg-blue-600 hover:bg-blue-600 text-white">
+        {isFromJal ? 'Sell $JAL' : 'Buy $JAL'}
+      </Button>
+    </div>
+  );
+};
+
+// === STAKE $JAL ===
+const StakeInterface = () => {
+  const [amount, setAmount] = useState('');
+
+  return (
+    <div className="space-y-4">
+      <div className="text-center">
+        <h3 className="font-bold text-foreground">Stake $JAL to Fund Water Projects</h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          Lock $JAL → Earn 8% APY → Fund meters & lake restoration
+        </p>
+      </div>
+
+      <Card className="bg-card">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <Logo className="h-8 w-8 text-primary" />
+              <div>
+                <p className="font-bold">$JAL</p>
+                <p className="text-sm text-muted-foreground">Balance: {tokens.JAL.balance.toLocaleString()}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="font-bold text-green-600">8.0%</p>
+              <p className="text-xs text-muted-foreground">APY</p>
+            </div>
+          </div>
+
+          <Input
+            type="number"
+            placeholder="0.0"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="text-2xl font-bold text-center"
+          />
+
+          <div className="mt-3 text-xs text-muted-foreground space-y-1">
+            <p>• 40% → New meters in Bangalore</p>
+            <p>• 30% → NGO lake restoration</p>
+            <p>• 30% → Treasury upgrades</p>
+          </div>
+
+          <Button size="lg" className="w-full mt-4 bg-blue-600 hover:bg-blue-600 text-white">
+            Stake $JAL
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+// === ADD LIQUIDITY ===
 const PoolInterface = () => {
-     const liquidityPools = [
-        { id: 1, token1: tokens.JAL, token2: tokens.USDC, apy: 12.5, totalLiquidity: 1_500_000 },
-        { id: 2, token1: tokens.JAL, token2: tokens.wETH, apy: 15.8, totalLiquidity: 800_000 },
-    ];
-    return (
-         <div className="space-y-4">
-            <div className="flex justify-between items-center">
-                 <h3 className="font-semibold text-foreground">Liquidity Pools</h3>
-                 <Button>
-                    <Plus className="mr-2 h-4 w-4" />
-                    New Position
-                 </Button>
+  const pools = [
+    { 
+      id: 1, 
+      token1: tokens.JAL, 
+      token2: tokens.SOL, 
+      apy: 118.5, 
+      totalLiquidity: 2_800_000,
+      fee: '0.3%'
+    },
+    { 
+      id: 2, 
+      token1: tokens.JAL, 
+      token2: tokens.USDC, 
+      apy: 95.2, 
+      totalLiquidity: 1_500_000,
+      fee: '0.3%'
+    },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="font-semibold text-foreground">Liquidity Pools (Solana)</h3>
+        <Button className="bg-blue-600 hover:bg-blue-600 text-white">
+          <Plus className="mr-2 h-4 w-4" />
+          New Position
+        </Button>
+      </div>
+
+      {pools.map(pool => (
+        <Card key={pool.id} className="bg-primary/5">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-2">
+                  {pool.token1.icon}
+                  {pool.token2.icon}
+                </div>
+                <div>
+                  <p className="font-bold">{pool.token1.name}/{pool.token2.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    ${pool.totalLiquidity.toLocaleString()} TVL
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="font-bold text-green-500">{pool.apy.toFixed(1)}% APY</p>
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <span>{pool.fee} fee</span>
+                </div>
+              </div>
             </div>
-            {liquidityPools.map(pool => (
-                <Card key={pool.id} className="bg-primary/5">
-                    <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="flex -space-x-2">
-                                    {pool.token1.icon}
-                                    {pool.token2.icon}
-                                </div>
-                                <div>
-                                    <p className="font-bold">{pool.token1.name}/{pool.token2.name}</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Total Liquidity: ${pool.totalLiquidity.toLocaleString()}
-                                    </p>
-                                </div>
-                            </div>
-                             <div className="text-right">
-                                <p className="font-bold text-green-500">{pool.apy.toFixed(1)}% APY</p>
-                                <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Info className="h-4 w-4 text-muted-foreground cursor-pointer inline-block ml-auto mt-1" />
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Based on last 24h fees.</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                                </TooltipProvider>
-                            </div>
-                        </div>
-                         <Button className="w-full mt-4">Add Liquidity</Button>
-                    </CardContent>
-                </Card>
-            ))}
-        </div>
-    )
-}
+            <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-600 text-white">
+              Add Liquidity
+            </Button>
+          </CardContent>
+        </Card>
+      ))}
+
+      <div className="text-center text-xs text-muted-foreground mt-6">
+        <p>Powered by <span className="font-bold text-blue-500">Raydium</span> on Solana</p>
+      </div>
+    </div>
+  );
+};
 
 const MarketplacePage = () => {
   const marketplaceImage = placeHolderImages.find(p => p.id === 'river-background');
@@ -210,6 +312,7 @@ const MarketplacePage = () => {
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <main className="flex-grow">
+        {/* HERO — OLD IMAGE */}
         <div className="relative flex items-center justify-center text-center min-h-[40vh] overflow-hidden bg-primary/10">
           {marketplaceImage && (
             <Image
@@ -229,30 +332,34 @@ const MarketplacePage = () => {
             </p>
           </div>
         </div>
-        
+
+        {/* MAIN CARD */}
         <div className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 md:px-6">
-                <Card className="max-w-md mx-auto bg-card/80 backdrop-blur-sm border-primary/20 shadow-xl">
-                    <CardContent className="p-4">
-                        <Tabs defaultValue="swap">
-                            <TabsList className="grid w-full grid-cols-3">
-                                <TabsTrigger value="swap">Swap</TabsTrigger>
-                                <TabsTrigger value="deposit">Deposit</TabsTrigger>
-                                <TabsTrigger value="pool">Pool</TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="swap" className="mt-6">
-                                <SwapInterface />
-                            </TabsContent>
-                            <TabsContent value="deposit" className="mt-6">
-                                <DepositInterface />
-                            </TabsContent>
-                            <TabsContent value="pool" className="mt-6">
-                                <PoolInterface />
-                            </TabsContent>
-                        </Tabs>
-                    </CardContent>
-                </Card>
-            </div>
+          <div className="container mx-auto px-4 md:px-6">
+            <Card className="max-w-md mx-auto bg-card/80 backdrop-blur-sm border-primary/20 shadow-xl">
+              <CardContent className="p-4">
+                <Tabs defaultValue="buy">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="buy">Buy $JAL</TabsTrigger>
+                    <TabsTrigger value="stake">Stake $JAL</TabsTrigger>
+                    <TabsTrigger value="pool">Add Liquidity</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="buy" className="mt-6">
+                    <SwapInterface />
+                  </TabsContent>
+
+                  <TabsContent value="stake" className="mt-6">
+                    <StakeInterface />
+                  </TabsContent>
+
+                  <TabsContent value="pool" className="mt-6">
+                    <PoolInterface />
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </main>
       <Footer />
@@ -261,6 +368,3 @@ const MarketplacePage = () => {
 };
 
 export default MarketplacePage;
-
-    
-    
