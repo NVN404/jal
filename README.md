@@ -4,7 +4,7 @@ https://jal-6q95.vercel.app/
 
 ## **White Paper - 12.10.2025**
 
-<img width="1563" height="748" alt="Screenshot From 2025-10-31 08-57-44" src="https://github.com/user-attachments/assets/e2c4d49a-008c-44e4-b490-5bf769040ada" />
+<!-- <img width="1563" height="748" alt="Screenshot From 2025-10-31 08-57-44" src="https://github.com/user-attachments/assets/e2c4d49a-008c-44e4-b490-5bf769040ada" /> -->
 
 # **Jal RWA Protocol**
 
