@@ -299,7 +299,7 @@ const MarketplacePage = () => {
       <Header />
       <main className="flex-grow">
         {/* HERO — OLD IMAGE */}
-        <div className="relative flex items-center justify-center text-center min-h-[40vh] overflow-hidden bg-primary/10">
+        <div className="relative flex items-center justify-center text-center h-[50vh] overflow-hidden bg-primary/10">
           {marketplaceImage && (
             <Image
               src={marketplaceImage.imageUrl}

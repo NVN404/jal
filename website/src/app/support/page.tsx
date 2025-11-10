@@ -222,7 +222,7 @@ const SupportPage = () => {
             </h1>
             <p className="mt-4 text-xl text-white/90 max-w-4xl mx-auto">
               1 $JAL = 1 m³ verified impact. <br />
-              <span className="font-bold text-cyan-300">Mint an NFT. Fund real projects. Get proof.</span>
+              <span className="font-bold text-white">Mint an NFT. Fund real projects. Get proof.</span>
             </p>
           </div>
         </div>

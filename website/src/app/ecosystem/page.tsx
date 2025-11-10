@@ -30,7 +30,7 @@ type EcosystemItem = {
 const ecosystemData: EcosystemItem[] = [
   {
     id: 'technology',
-    category: 'Technology',
+    category: '',
     title: 'Our Technology',
     headline: 'The Jal Smart Meter',
     partnership: 'We build and deploy IoT smart meters that measure real water flow — the foundation of truth in the Jal ecosystem.',
@@ -48,7 +48,7 @@ const ecosystemData: EcosystemItem[] = [
   },
   {
     id: 'residents',
-    category: 'For Residents',
+    category: '',
     title: 'For Residents',
     headline: 'Save Water. Earn $JAL. Profit.',
     partnership: 'Lease a Jal meter, use less than your neighbors, and earn $JAL every month.',
@@ -66,7 +66,7 @@ const ecosystemData: EcosystemItem[] = [
   },
   {
     id: 'enterprises',
-    category: 'For Enterprises',
+    category: '',
     title: 'For Enterprises',
     headline: 'Factories, Offices, Hotels — Reduce, Earn, or Buy Impact.',
     partnership: 'Whether you’re a factory reducing water use or a corporate HQ proving ESG — Jal gives you two paths: earn $JAL by saving water, or buy $JAL from others to claim verified water-positive impact.',
@@ -93,7 +93,7 @@ const ecosystemData: EcosystemItem[] = [
   },
   {
     id: 'municipalities',
-    category: 'For Municipalities',
+    category: '',
     title: 'For Municipalities',
     headline: 'Treat Water. Mint $JAL. Fund Upgrades.',
     partnership: 'Install inflow/outflow meters. Every m³ of treated water = 1 $JAL minted.',
@@ -111,7 +111,7 @@ const ecosystemData: EcosystemItem[] = [
   },
   {
     id: 'conservationists',
-    category: 'For Water Conservationists',
+    category: '',
     title: 'For Water Conservationists',
     headline: 'Prove Impact. Mint $JAL. Fund Forever.',
     partnership: 'NGOs deploy sensors before/after projects. Proven savings = $JAL minted.',
@@ -218,21 +218,21 @@ const EcosystemSection = ({ item, index }: { item: EcosystemItem; index: number 
 };
 
 const EcosystemPage = () => {
-  const techImage = placeHolderImages.find(p => p.id === 'hero-background');
+  const marketplaceImage = placeHolderImages.find(p => p.id === 'river-background');
 
   return (
     <div className="flex flex-col min-h-screen bg-primary/10">
       <Header />
       <main className="flex-grow">
         {/* HERO SECTION */}
-        <div className="relative flex items-center justify-center text-center h-[75vh] overflow-hidden">
-          {techImage && (
+        <div className="relative flex items-center justify-center text-center h-[50vh] overflow-hidden">
+          {marketplaceImage  && (
             <Image
-              src={techImage.imageUrl}
-              alt={techImage.description}
+              src={marketplaceImage.imageUrl}
+              alt={marketplaceImage.description}
               fill
               className="object-cover z-0"
-              data-ai-hint={techImage.imageHint}
+              data-ai-hint={marketplaceImage.imageHint}
               priority
             />
           )}
@@ -246,10 +246,10 @@ const EcosystemPage = () => {
         </div>
 
         {/* TOKEN PEG BADGE */}
-        <div className="container mx-auto px-4 md:px-6 py-12 text-center">
+        <div className="container mx-auto px-4 md:px-6 py-6 text-center">
           <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">$J</div>
-            <span className="text-white font-semibold">1 $JAL = 1 m³ verified water impact</span>
+            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">$Jal</div>
+            <span className="text-black font-semibold">1 $JAL = 1 m³ verified water impact</span>
           </div>
         </div>
 
