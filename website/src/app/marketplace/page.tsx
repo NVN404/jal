@@ -230,7 +230,7 @@ const PoolInterface = () => {
       id: 1, 
       token1: tokens.JAL, 
       token2: tokens.SOL, 
-      apy: 118.5, 
+      apy: 18.5, 
       totalLiquidity: 2_800_000,
       fee: '0.3%'
     },
@@ -238,7 +238,7 @@ const PoolInterface = () => {
       id: 2, 
       token1: tokens.JAL, 
       token2: tokens.USDC, 
-      apy: 95.2, 
+      apy: 9.2, 
       totalLiquidity: 1_500_000,
       fee: '0.3%'
     },
