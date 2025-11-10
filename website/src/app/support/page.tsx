@@ -28,7 +28,7 @@ const packs: Pack[] = [
     jal: 100,
     m3: 100,
     tier: 'Bronze',
-    imageId: 'conservationists',
+    imageId: '',
     description: 'Start your water legacy. Fund local lake cleanup.',
     benefits: ['NFT Proof', 'Name on donor wall', 'Monthly impact report'],
   },
@@ -38,7 +38,7 @@ const packs: Pack[] = [
     jal: 1_000,
     m3: 1_000,
     tier: 'Silver',
-    imageId: 'river-background',
+    imageId: '',
     description: 'Restore a river. Fund NGO water meters in villages.',
     benefits: ['Exclusive NFT', 'Video from field', 'Annual impact audit'],
   },
@@ -48,7 +48,7 @@ const packs: Pack[] = [
     jal: 10_000,
     m3: 10_000,
     tier: 'Gold',
-    imageId: 'hero-background',
+    imageId: '',
     description: 'Save a watershed. Fund industrial recycling plants.',
     benefits: ['Premium NFT', 'Live satellite tracking', 'CEO impact call'],
   },
@@ -58,7 +58,7 @@ const packs: Pack[] = [
     jal: 100_000,
     m3: 100_000,
     tier: 'Diamond',
-    imageId: 'corporates',
+    imageId: '',
     description: 'Change a nation. Fund municipal water systems.',
     benefits: ['1/1 NFT', 'Name a project', 'Board seat on Jal Council'],
   },
@@ -181,7 +181,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
             <MapPin className="w-4 h-4 text-primary" />
             <span className="truncate">{project.location}</span>
           </div>
-          <div class72 className="flex items-center gap-1">
+          <div  className="flex items-center gap-1">
             <Droplets className="w-4 h-4 text-green-600" />
             <span>{(project.m3 / 1000).toFixed(0)}K m³</span>
           </div>

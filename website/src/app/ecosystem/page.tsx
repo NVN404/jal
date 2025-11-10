@@ -44,7 +44,7 @@ const ecosystemData: EcosystemItem[] = [
       "Powers $JAL minting with zero fraud",
       "1 $JAL = 1 m³ verified impact"
     ],
-    imageId: 'hero-background',
+    imageId: 'smart-meter',
   },
   {
     id: 'residents',
