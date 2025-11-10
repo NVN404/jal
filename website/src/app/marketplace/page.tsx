@@ -13,25 +13,11 @@ import { ArrowUpDown, Droplet ,Plus} from 'lucide-react';
 import { Logo } from '@/components/icons/logo';
 
 const SolanaIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
-    <defs>
-      <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="solana">
-        <stop stopColor="#00FFA3" offset="0%"/>
-        <stop stopColor="#00D1FF" offset="100%"/>
-      </linearGradient>
-    </defs>
-    <circle fill="url(#solana)" cx="19" cy="19" r="19"/>
-    <path d="M11.8 24.4c.2.2.5.3.7.3h14.3l-2.8-2.8H11.8l2.8 2.8c-.2.2-.2.5 0 .7zM11.8 13.6c.2-.2.5-.3.7-.3h14.3l-2.8 2.8H11.8l2.8-2.8c-.2-.2-.2-.5 0-.7zM26.2 19c-.2-.2-.5-.3-.7-.3H11.2l2.8 2.8h14.3l-2.8-2.8c.2-.2.2-.5 0-.7z" fill="#fff"/>
-  </svg>
+  <Image src="/solana-sol-logo.webp" alt="Solana" width={24} height={24} className="h-6 w-6" />
 );
 
 const UsdcIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
-    <g fill="none" fillRule="evenodd">
-      <circle fill="#2775CA" cx="19" cy="19" r="19"/>
-      <path d="M19.833 26.583c-4.41 0-7.989-3.483-7.989-7.778s3.58-7.778 7.99-7.778c1.332 0 2.58.32 3.693.88l-1.39 2.3A4.925 4.925 0 0019.833 13.9c-2.824 0-5.117 2.22-5.117 4.905 0 2.686 2.293 4.906 5.117 4.906a4.92 4.92 0 003.3-.993l1.403 2.316a7.86 7.86 0 01-4.703 1.448zm4.564-10.46l-1.42 2.339c.228.43.355.914.355 1.432s-.127 1.002-.356 1.432l1.42 2.338c.6-.93.94-2.01.94-3.17s-.34-2.24-.94-3.17z" fill="#FFF"/>
-    </g>
-  </svg>
+  <Image src="/usd-coin-usdc-logo-png_seeklogo-408043.webp" alt="USDC" width={24} height={24} className="h-6 w-6" />
 );
 
 type Token = {
@@ -49,7 +35,7 @@ const tokens: Record<string, Token> = {
 // === SWAP: TRUE SWAP + TOGGLE USDC/SOL ===
 const SwapInterface = () => {
   const [isFromJal, setIsFromJal] = useState(false); // false = pay USDC/SOL → receive $JAL
-  const [payToken, setPayToken] = useState<Token>(tokens.USDC);
+  const [payToken, setPayToken] = useState<Token>(tokens.SOL);
   const [amountPay, setAmountPay] = useState('');
   const [amountReceive, setAmountReceive] = useState('');
 
