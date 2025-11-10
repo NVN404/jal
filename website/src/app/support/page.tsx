@@ -1,321 +1,293 @@
-
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { placeHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Droplets, Recycle, Leaf, Factory, Landmark } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { BadgeCheck, Trophy, MapPin, TreePine, Recycle, Droplets } from 'lucide-react';
 
-type CreditType = 'Renewal' | 'Conservation';
-type SellerType = 'Municipality' | 'NGO' | 'Industry';
-
-type WaterCredit = {
+type Pack = {
   id: string;
-  title: string;
-  seller: string;
-  sellerType: SellerType;
-  type: CreditType;
-  volume: number;
-  pricePerLiter: number;
+  name: string;
+  jal: number;
+  m3: number;
+  tier: 'Bronze' | 'Silver' | 'Gold' | 'Diamond';
   imageId: string;
-  location: string;
+  description: string;
+  benefits: string[];
 };
 
-const marketplaceData: WaterCredit[] = [
+const packs: Pack[] = [
   {
     id: '1',
-    title: 'Bengaluru Lake Rejuvenation',
-    seller: 'Bangalore Water Initiative',
-    sellerType: 'NGO',
-    type: 'Conservation',
-    volume: 500000,
-    pricePerLiter: 0.12,
+    name: 'Seed',
+    jal: 100,
+    m3: 100,
+    tier: 'Bronze',
     imageId: 'conservationists',
-    location: 'Bengaluru, India',
+    description: 'Start your water legacy. Fund local lake cleanup.',
+    benefits: ['NFT Proof', 'Name on donor wall', 'Monthly impact report'],
   },
   {
     id: '2',
-    title: 'Mumbai Industrial Water Recycling',
-    seller: 'AquaPure Industries',
-    sellerType: 'Industry',
-    type: 'Renewal',
-    volume: 1200000,
-    pricePerLiter: 0.08,
-    imageId: 'industries',
-    location: 'Mumbai, India',
+    name: 'River',
+    jal: 1_000,
+    m3: 1_000,
+    tier: 'Silver',
+    imageId: 'river-background',
+    description: 'Restore a river. Fund NGO water meters in villages.',
+    benefits: ['Exclusive NFT', 'Video from field', 'Annual impact audit'],
   },
   {
     id: '3',
-    title: 'Delhi Yamuna Cleanup',
-    seller: 'Delhi Municipal Corporation',
-    sellerType: 'Municipality',
-    type: 'Renewal',
-    volume: 2500000,
-    pricePerLiter: 0.09,
-    imageId: 'municipalities',
-    location: 'Delhi, India',
+    name: 'Ocean',
+    jal: 10_000,
+    m3: 10_000,
+    tier: 'Gold',
+    imageId: 'hero-background',
+    description: 'Save a watershed. Fund industrial recycling plants.',
+    benefits: ['Premium NFT', 'Live satellite tracking', 'CEO impact call'],
   },
   {
     id: '4',
-    title: 'Amazon Rainforest Water Basin',
-    seller: 'Rainforest Trust',
-    sellerType: 'NGO',
-    type: 'Conservation',
-    volume: 10000000,
-    pricePerLiter: 0.15,
-    imageId: 'river-background',
-    location: 'Amazon, Brazil',
-  },
-    {
-    id: '5',
-    title: 'City of London Thames Project',
-    seller: 'London Waterworks',
-    sellerType: 'Municipality',
-    type: 'Renewal',
-    volume: 3000000,
-    pricePerLiter: 0.11,
-    imageId: 'hero-background',
-    location: 'London, UK',
-  },
-  {
-    id: '6',
-    title: 'Nile River Delta Initiative',
-    seller: 'Sahara Eco-Fund',
-    sellerType: 'NGO',
-    type: 'Conservation',
-    volume: 750000,
-    pricePerLiter: 0.13,
+    name: 'Legacy',
+    jal: 100_000,
+    m3: 100_000,
+    tier: 'Diamond',
     imageId: 'corporates',
-    location: 'Cairo, Egypt',
-  },
-  {
-    id: '7',
-    title: 'Rhine River Quality Improvement',
-    seller: 'German Manufacturing Alliance',
-    sellerType: 'Industry',
-    type: 'Renewal',
-    volume: 1800000,
-    pricePerLiter: 0.07,
-    imageId: 'industries',
-    location: 'Cologne, Germany',
-  },
-  {
-    id: '8',
-    title: 'Great Barrier Reef Runoff Prevention',
-    seller: 'Reef Guardian Collective',
-    sellerType: 'NGO',
-    type: 'Conservation',
-    volume: 1250000,
-    pricePerLiter: 0.14,
-    imageId: 'conservationists',
-    location: 'Queensland, Australia',
-  },
-  {
-    id: '9',
-    title: 'Singapore NEWater Plant Expansion',
-    seller: 'Singapore Public Utilities Board',
-    sellerType: 'Municipality',
-    type: 'Renewal',
-    volume: 5000000,
-    pricePerLiter: 0.10,
-    imageId: 'municipalities',
-    location: 'Singapore',
-  },
-  {
-    id: '10',
-    title: 'California Aqueduct Efficiency',
-    seller: 'Golden State Water Savers',
-    sellerType: 'NGO',
-    type: 'Conservation',
-    volume: 450000,
-    pricePerLiter: 0.11,
-    imageId: 'river-background',
-    location: 'California, USA',
+    description: 'Change a nation. Fund municipal water systems.',
+    benefits: ['1/1 NFT', 'Name a project', 'Board seat on Jal Council'],
   },
 ];
 
+type Project = {
+  id: string;
+  title: string;
+  org: string;
+  type: 'NGO' | 'Municipality' | 'Industry';
+  location: string;
+  m3: number;
+  imageId: string;
+  verified: boolean;
+};
 
-const getIcon = (type: SellerType) => {
-    switch (type) {
-        case 'Municipality': return <Landmark className="w-4 h-4" />;
-        case 'NGO': return <Leaf className="w-4 h-4" />;
-        case 'Industry': return <Factory className="w-4 h-4" />;
-    }
-}
+const projects: Project[] = [
+  { id: '1', title: 'Bengaluru Lake Rejuvenation', org: 'Bangalore Water Initiative', type: 'NGO', location: 'Bengaluru, India', m3: 500_000, imageId: 'conservationists', verified: true },
+  { id: '2', title: 'Mumbai Industrial Water Recycling', org: 'AquaPure Industries', type: 'Industry', location: 'Mumbai, India', m3: 1_200_000, imageId: 'industries', verified: true },
+  { id: '3', title: 'Delhi Yamuna Cleanup', org: 'Delhi Municipal Corporation', type: 'Municipality', location: 'Delhi, India', m3: 2_500_000, imageId: 'municipalities', verified: true },
+  { id: '4', title: 'Amazon Rainforest Water Basin', org: 'Rainforest Trust', type: 'NGO', location: 'Amazon, Brazil', m3: 10_000_000, imageId: 'river-background', verified: true },
+];
 
+const getIcon = (type: Project['type']) => {
+  switch (type) {
+    case 'Municipality': return <MapPin className="w-4 h-4" />;
+    case 'NGO': return <TreePine className="w-4 h-4" />;
+    case 'Industry': return <Recycle className="w-4 h-4" />;
+  }
+};
 
-const CreditCard = ({ credit }: { credit: WaterCredit }) => {
-    const image = placeHolderImages.find(p => p.id === credit.imageId);
-    const totalPrice = credit.volume * credit.pricePerLiter;
+const PackCard = ({ pack }: { pack: Pack }) => {
+  const image = placeHolderImages.find(p => p.id === pack.imageId);
 
-    return (
-        <Card className="w-full overflow-hidden transition-all duration-300 hover:shadow-primary/20 hover:-translate-y-2 group bg-card">
-            <CardContent className="p-0">
-                <div className="relative h-48 w-full">
-                    {image && <Image src={image.imageUrl} alt={image.description} fill className="object-cover" data-ai-hint={image.imageHint} />}
-                    <div className="absolute top-2 right-2 flex items-center gap-2">
-                        <div className={`flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-semibold bg-black/50 text-white`}>
-                           {credit.type === 'Renewal' ? 
-                                <Recycle className="w-3.5 h-3.5" /> : 
-                                <Leaf className="w-3.5 h-3.5" />
-                            }
-                            <span>{credit.type}</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="p-4">
-                    <h3 className="text-lg font-bold text-foreground truncate">{credit.title}</h3>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1.5">
-                       {getIcon(credit.sellerType)}
-                       <span className="ml-2">{credit.seller}</span>
-                    </div>
+  return (
+    <Card className="w-full h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group bg-card border-2 border-transparent hover:border-primary/50">
+      <div className="relative h-64 w-full bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 flex-shrink-0">
+        {image && (
+          <Image
+            src={image.imageUrl}
+            alt={pack.name}
+            fill
+            className="object-cover opacity-30 group-hover:opacity-40 transition-opacity"
+          />
+        )}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Trophy className={`w-24 h-24 ${
+            pack.tier === 'Bronze' ? 'text-amber-600' :
+            pack.tier === 'Silver' ? 'text-gray-400' :
+            pack.tier === 'Gold' ? 'text-yellow-500' :
+            'text-cyan-400'
+          }`} />
+        </div>
+      </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <p className="text-muted-foreground">Volume</p>
-                            <p className="font-semibold text-foreground flex items-center">
-                                <Droplets className="w-4 h-4 mr-1 text-primary" />
-                                {credit.volume.toLocaleString()} L
-                            </p>
-                        </div>
-                         <div>
-                            <p className="text-muted-foreground">Location</p>
-                            <p className="font-semibold text-foreground truncate">{credit.location}</p>
-                        </div>
-                    </div>
+      <div className="p-6 space-y-4 flex-grow flex flex-col">
+        <div className="text-center flex-grow">
+          <h3 className="text-2xl font-bold text-foreground">{pack.name}</h3>
+          <p className="text-sm text-muted-foreground mt-1">{pack.tier} Tier</p>
+        </div>
 
-                    <div className="mt-6 border-t pt-4">
-                        <p className="text-muted-foreground text-sm">Total Price</p>
-                         <p className="text-2xl font-bold text-primary">
-                            {totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                            <span className="text-sm font-normal text-muted-foreground"> $JAL</span>
-                        </p>
-                        <Button className="w-full mt-4 font-bold">Buy Now</Button>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    )
-}
+        <p className="text-sm text-center text-muted-foreground flex-grow">{pack.description}</p>
+
+        <div className="flex justify-center items-center gap-2 text-lg font-bold">
+          <span className="text-primary">{pack.jal.toLocaleString()}</span>
+          <span className="text-muted-foreground">$JAL</span>
+          <span className="text-2xl">→</span>
+          <span className="text-green-600">{pack.m3.toLocaleString()} m³</span>
+        </div>
+
+        <div className="space-y-1 text-xs text-muted-foreground">
+          {pack.benefits.map((b, i) => (
+            <p key={i} className="flex items-center justify-center gap-1">
+              <BadgeCheck className="w-3 h-3 text-green-600" />
+              {b}
+            </p>
+          ))}
+        </div>
+
+        <Button className="w-full text-lg font-bold bg-blue-600 hover:bg-blue-600 text-white mt-auto">
+          Mint NFT
+        </Button>
+      </div>
+    </Card>
+  );
+};
+
+const ProjectCard = ({ project }: { project: Project }) => {
+  const image = placeHolderImages.find(p => p.id === project.imageId);
+
+  return (
+    <Card className="w-full h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group bg-card">
+      <div className="relative h-48 w-full flex-shrink-0">
+        {image && (
+          <Image
+            src={image.imageUrl}
+            alt={project.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform"
+          />
+        )}
+        {project.verified && (
+          <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs font-medium text-green-700 flex items-center gap-1">
+            <BadgeCheck className="w-3 h-3" />
+            Verified
+          </div>
+        )}
+      </div>
+
+      <div className="p-4 space-y-3 flex-grow flex flex-col">
+        <h3 className="text-lg font-bold text-foreground line-clamp-2">{project.title}</h3>
+
+        <div className="flex items-center text-sm text-muted-foreground">
+          {getIcon(project.type)}
+          <span className="ml-2 truncate">{project.org}</span>
+        </div>
+
+        <div className="flex items-center gap-4 text-sm flex-grow">
+          <div className="flex items-center gap-1">
+            <MapPin className="w-4 h-4 text-primary" />
+            <span className="truncate">{project.location}</span>
+          </div>
+          <div class72 className="flex items-center gap-1">
+            <Droplets className="w-4 h-4 text-green-600" />
+            <span>{(project.m3 / 1000).toFixed(0)}K m³</span>
+          </div>
+        </div>
+
+        <Button variant="outline" className="w-full mt-auto">
+          View Project
+        </Button>
+      </div>
+    </Card>
+  );
+};
 
 const SupportPage = () => {
-  const marketplaceImage = placeHolderImages.find(p => p.id === 'river-background');
-  const [activeFilter, setActiveFilter] = useState<CreditType | 'All'>('All');
-  const [sortBy, setSortBy] = useState('volume_desc');
-
-  const filteredAndSortedData = useMemo(() => {
-    let data = marketplaceData;
-
-    if (activeFilter !== 'All') {
-      data = data.filter(c => c.type === activeFilter);
-    }
-
-    return [...data].sort((a, b) => {
-        const [key, order] = sortBy.split('_');
-        let valA, valB;
-
-        switch (key) {
-            case 'price':
-                valA = a.pricePerLiter * a.volume;
-                valB = b.pricePerLiter * b.volume;
-                break;
-            case 'volume':
-                valA = a.volume;
-                valB = b.volume;
-                break;
-            case 'title':
-                valA = a.title;
-                valB = b.title;
-                break;
-            default:
-                return 0;
-        }
-
-        if (typeof valA === 'number' && typeof valB === 'number') {
-            return order === 'asc' ? valA - valB : valB - valA;
-        }
-        if (typeof valA === 'string' && typeof valB === 'string') {
-             return order === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-        }
-        return 0;
-    });
-
-  }, [activeFilter, sortBy]);
+  // OLD HERO IMAGE — UNTOUCHED
+  const heroImage = placeHolderImages.find(p => p.id === 'river-background');
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <main className="flex-grow">
+        {/* HERO — OLD IMAGE, NO CHANGE */}
         <div className="relative flex items-center justify-center text-center h-[50vh] overflow-hidden bg-primary/10">
-          {marketplaceImage && (
+          {heroImage && (
             <Image
-              src={marketplaceImage.imageUrl}
-              alt={marketplaceImage.description}
+              src={heroImage.imageUrl}
+              alt={heroImage.description}
               fill
               className="object-cover z-0"
-              data-ai-hint={marketplaceImage.imageHint}
+              data-ai-hint={heroImage.imageHint}
               priority
             />
           )}
           <div className="absolute inset-0 bg-primary/80 z-10"></div>
           <div className="container mx-auto px-4 md:px-6 relative z-20">
-            <h1 className="text-4xl md:text-6xl font-bold text-white">Support Impact Projects</h1>
-            <p className="mt-4 text-lg text-white/90 max-w-3xl mx-auto">
-              Fund direct water impact and achieve your sustainability goals with complete transparency by purchasing Verifiable Water Credits.
+            <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-2xl">
+              Mint Impact. Save Water.
+            </h1>
+            <p className="mt-4 text-xl text-white/90 max-w-4xl mx-auto">
+              1 $JAL = 1 m³ verified impact. <br />
+              <span className="font-bold text-cyan-300">Mint an NFT. Fund real projects. Get proof.</span>
             </p>
           </div>
         </div>
-        
+
+        {/* TABS: MINT vs EXPLORE */}
         <div className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
-                    <Tabs defaultValue="All" className="w-full md:w-auto" onValueChange={(val) => setActiveFilter(val as any)}>
-                        <TabsList>
-                            <TabsTrigger value="All">All Projects</TabsTrigger>
-                            <TabsTrigger value="Conservation">
-                                <Leaf className="w-4 h-4 mr-2" />
-                                Conservation
-                            </TabsTrigger>
-                            <TabsTrigger value="Renewal">
-                                <Recycle className="w-4 h-4 mr-2" />
-                                Renewal
-                            </TabsTrigger>
-                        </TabsList>
-                    </Tabs>
-                     <div className="w-full md:w-auto md:min-w-48">
-                        <Select onValueChange={setSortBy} defaultValue={sortBy}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Sort by" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="volume_desc">Volume (High to Low)</SelectItem>
-                                <SelectItem value="volume_asc">Volume (Low to High)</SelectItem>
-                                <SelectItem value="price_desc">Price (High to Low)</SelectItem>
-                                <SelectItem value="price_asc">Price (Low to High)</SelectItem>
-                                <SelectItem value="title_asc">Alphabetical</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+          <div className="container mx-auto px-4 md:px-6">
+            <Tabs defaultValue="mint" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-12 h-14">
+                <TabsTrigger value="mint" className="text-lg h-full flex items-center justify-center">
+                  <Trophy className="w-5 h-5 mr-2" />
+                  Mint Impact
+                </TabsTrigger>
+                <TabsTrigger value="projects" className="text-lg h-full flex items-center justify-center">
+                  <MapPin className="w-5 h-5 mr-2" />
+                  Explore Projects
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="mint">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold">Choose Your Legacy</h2>
+                  <p className="text-muted-foreground mt-2">Every $JAL funds real water projects</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-                    {filteredAndSortedData.map(credit => (
-                        <CreditCard key={credit.id} credit={credit} />
-                    ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {packs.map(pack => (
+                    <PackCard key={pack.id} pack={pack} />
+                  ))}
                 </div>
-                {filteredAndSortedData.length === 0 && (
-                     <div className="text-center col-span-full py-16">
-                        <h3 className="text-2xl font-semibold text-foreground">No Projects Found</h3>
-                        <p className="text-muted-foreground mt-2">Try adjusting your filters.</p>
-                    </div>
-                )}
+              </TabsContent>
+
+              <TabsContent value="projects">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold">Live Water Projects</h2>
+                  <p className="text-muted-foreground mt-2">See where your impact flows</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {projects.map(project => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+
+            {/* LIVE STATS */}
+            <div className="mt-16 bg-primary/5 rounded-2xl p-8 text-center">
+              <h3 className="text-2xl font-bold mb-4">Live Impact</h3>
+              <div className="grid grid-cols-3 gap-6 text-center">
+                <div>
+                  <p className="text-4xl font-bold text-cyan-600">1,284,000</p>
+                  <p className="text-muted-foreground">$JAL Minted</p>
+                </div>
+                <div>
+                  <p className="text-4xl font-bold text-green-600">1,284,000 m³</p>
+                  <p className="text-muted-foreground">Water Saved</p>
+                </div>
+                <div>
+                  <p className="text-4xl font-bold text-blue-600">842</p>
+                  <p className="text-muted-foreground">NFTs Minted</p>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
       </main>
       <Footer />
