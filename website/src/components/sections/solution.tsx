@@ -9,27 +9,27 @@ const timelineData = [
   {
     step: '01',
     title: 'Partnership',
-    description: 'Collaborate with Residents’ Associations and facility managers for scalable integration.',
+    description: 'Partnering with Residents’ Associations, Municipalities, and Industries to onboard with secure IoT devices and verified data protocols.',
   },
   {
     step: '02',
-    title: 'Tracking',
-    description: 'Smart meters send real-time, verified water usage data to our secure platform.',
+    title: 'Data Tracking',
+    description: 'Uploading manually (admins) / automated verified meter readings to onchain - solana smart contracts  . maintaining Zero-fraud data integrity.',
   },
   {
     step: '03',
-    title: 'Token Creation',
-    description: 'A smart contract issues $JAL tokens for every cubic meter of verified water impact.',
+    title: 'Token Minting',
+    description: 'Smart contract mints $JAL: Residents (below margin water usage ), Municipalities (based on quality of recycled water). Industries and corporations should regulate their water usage through $JAL tokens.',
   },
   {
     step: '04',
-    title: 'Dual Market',
-    description: 'Residents redeem tokens for discounts, while corporations buy them for ESG compliance.',
+    title: 'Open Market',
+    description: 'Corporations buy $JAL on open market. Residents’ Associations and Municipalities sell tokens for revenue. and they can also support NGOs in water-stressed areas.',
   },
   {
     step: '05',
-    title: 'Regeneration',
-    description: 'Revenue from corporate buyers funds new community projects like rainwater harvesting.',
+    title: 'Retirement & Impact',
+    description: 'anyone can retire $JAL on-chain by supporting NGOs and support water conservation. Every retired token = 1 m³ real impact.majorly it is done by corporations and industries for ESG compliance.',
   },
 ];
 
@@ -40,7 +40,7 @@ const Solution = () => {
         <div className="text-center max-w-3xl mx-auto mb-24">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground">The Jal Solution: A New Water Economy</h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Our blockchain-powered platform turns crisis into opportunity, creating a transparent global market that rewards positive water impact.
+            Our Solana-powered platform turns crisis into opportunity, creating a transparent global market that rewards positive water impact.
           </p>
         </div>
 
